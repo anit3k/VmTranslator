@@ -157,6 +157,7 @@
 
             return assemblyCode;
         }
+
         private string segmentToMemory(string segment)
         {
             switch (segment)
@@ -193,7 +194,12 @@
         {
             var assemblyCode = new List<string>();
 
-            // Implement translation logic for sub command
+            // Pop the top two values from the stack
+            assemblyCode.Add("@SP");
+            assemblyCode.Add("AM=M-1"); // Decrement SP and load the address of the second value
+            assemblyCode.Add("D=M"); // Load the second value into D
+            assemblyCode.Add("A=A-1"); // Move back to the address of the first value
+            assemblyCode.Add("M=M-D"); // Subtract the second value from the first value and store the result
 
             return assemblyCode;
         }
@@ -202,15 +208,39 @@
         {
             var assemblyCode = new List<string>();
 
-            // Implement translation logic for sub command
+            // Pop the top value from the stack
+            assemblyCode.Add("@SP");
+            assemblyCode.Add("A=M-1"); // Load the address of the top value
+            assemblyCode.Add("M=-M"); // Negate the value at the top of the stack
 
             return assemblyCode;
         }
+
         private List<string> TranslateEq()
         {
             var assemblyCode = new List<string>();
 
-            // Implement translation logic for sub command
+            // Pop the top two values from the stack
+            assemblyCode.Add("@SP");
+            assemblyCode.Add("AM=M-1"); // Decrement SP and load the address of the second value
+            assemblyCode.Add("D=M"); // Load the second value into D
+            assemblyCode.Add("A=A-1"); // Move back to the address of the first value
+
+            // Compare the two values and set the result (true or false) on the stack
+            assemblyCode.Add("D=M-D"); // Compare the values (subtract the second from the first)
+            assemblyCode.Add("@EQUAL"); // Label for equal (true)
+            assemblyCode.Add("D;JEQ"); // If D is 0 (equal), jump to the EQUAL label
+            assemblyCode.Add("D=0"); // If not equal, set D to 0 (false)
+            assemblyCode.Add("@END_EQUAL");
+            assemblyCode.Add("0;JMP"); // Unconditional jump to END_EQUAL
+            assemblyCode.Add("(EQUAL)"); // Label for equal (true)
+            assemblyCode.Add("D=-1"); // Set D to -1 (true)
+            assemblyCode.Add("(END_EQUAL)");
+
+            // Store the result (true or false) at the top of the stack
+            assemblyCode.Add("@SP");
+            assemblyCode.Add("A=M-1"); // Move to the top of the stack
+            assemblyCode.Add("M=D"); // Store the result at the top of the stack
 
             return assemblyCode;
         }
@@ -219,7 +249,27 @@
         {
             var assemblyCode = new List<string>();
 
-            // Implement translation logic for sub command
+            // Pop the top two values from the stack
+            assemblyCode.Add("@SP");
+            assemblyCode.Add("AM=M-1"); // Decrement SP and load the address of the second value
+            assemblyCode.Add("D=M"); // Load the second value into D
+            assemblyCode.Add("A=A-1"); // Move back to the address of the first value
+
+            // Compare the two values and set the result (true or false) on the stack
+            assemblyCode.Add("D=M-D"); // Compare the values (subtract the second from the first)
+            assemblyCode.Add("@GREATER_THAN"); // Label for greater than (true)
+            assemblyCode.Add("D;JGT"); // If D is greater than 0 (greater than), jump to the GREATER_THAN label
+            assemblyCode.Add("D=0"); // If not greater than, set D to 0 (false)
+            assemblyCode.Add("@END_GREATER_THAN");
+            assemblyCode.Add("0;JMP"); // Unconditional jump to END_GREATER_THAN
+            assemblyCode.Add("(GREATER_THAN)"); // Label for greater than (true)
+            assemblyCode.Add("D=-1"); // Set D to -1 (true)
+            assemblyCode.Add("(END_GREATER_THAN)");
+
+            // Store the result (true or false) at the top of the stack
+            assemblyCode.Add("@SP");
+            assemblyCode.Add("A=M-1"); // Move to the top of the stack
+            assemblyCode.Add("M=D"); // Store the result at the top of the stack
 
             return assemblyCode;
         }
@@ -228,7 +278,27 @@
         {
             var assemblyCode = new List<string>();
 
-            // Implement translation logic for sub command
+            // Pop the top two values from the stack
+            assemblyCode.Add("@SP");
+            assemblyCode.Add("AM=M-1"); // Decrement SP and load the address of the second value
+            assemblyCode.Add("D=M"); // Load the second value into D
+            assemblyCode.Add("A=A-1"); // Move back to the address of the first value
+
+            // Compare the two values and set the result (true or false) on the stack
+            assemblyCode.Add("D=M-D"); // Compare the values (subtract the second from the first)
+            assemblyCode.Add("@LESS_THAN"); // Label for less than (true)
+            assemblyCode.Add("D;JLT"); // If D is less than 0 (less than), jump to the LESS_THAN label
+            assemblyCode.Add("D=0"); // If not less than, set D to 0 (false)
+            assemblyCode.Add("@END_LESS_THAN");
+            assemblyCode.Add("0;JMP"); // Unconditional jump to END_LESS_THAN
+            assemblyCode.Add("(LESS_THAN)"); // Label for less than (true)
+            assemblyCode.Add("D=-1"); // Set D to -1 (true)
+            assemblyCode.Add("(END_LESS_THAN)");
+
+            // Store the result (true or false) at the top of the stack
+            assemblyCode.Add("@SP");
+            assemblyCode.Add("A=M-1"); // Move to the top of the stack
+            assemblyCode.Add("M=D"); // Store the result at the top of the stack
 
             return assemblyCode;
         }
@@ -237,7 +307,14 @@
         {
             var assemblyCode = new List<string>();
 
-            // Implement translation logic for sub command
+            // Pop the top two values from the stack
+            assemblyCode.Add("@SP");
+            assemblyCode.Add("AM=M-1"); // Decrement SP and load the address of the second value
+            assemblyCode.Add("D=M"); // Load the second value into D
+            assemblyCode.Add("A=A-1"); // Move back to the address of the first value
+
+            // Perform the AND operation and store the result at the top of the stack
+            assemblyCode.Add("M=M&D"); // Perform bitwise AND operation and store the result
 
             return assemblyCode;
         }
@@ -246,7 +323,14 @@
         {
             var assemblyCode = new List<string>();
 
-            // Implement translation logic for sub command
+            // Pop the top two values from the stack
+            assemblyCode.Add("@SP");
+            assemblyCode.Add("AM=M-1"); // Decrement SP and load the address of the second value
+            assemblyCode.Add("D=M"); // Load the second value into D
+            assemblyCode.Add("A=A-1"); // Move back to the address of the first value
+
+            // Perform the OR operation and store the result at the top of the stack
+            assemblyCode.Add("M=M|D"); // Perform bitwise OR operation and store the result
 
             return assemblyCode;
         }
@@ -255,9 +339,14 @@
         {
             var assemblyCode = new List<string>();
 
-            // Implement translation logic for sub command
+            // Access the top value on the stack
+            assemblyCode.Add("@SP");
+            assemblyCode.Add("A=M-1"); // Load the address of the top value
+
+            // Perform the NOT operation and store the result at the top of the stack
+            assemblyCode.Add("M=!M"); // Perform bitwise NOT operation and store the result
 
             return assemblyCode;
-        }        
+        }
     }
 }
