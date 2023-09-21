@@ -11,25 +11,31 @@ string filePath = $"C:\\Files\\{fileName}";
 
 try
 {
-	List<string> lines = fileHandler.ReadAllLines(filePath);
+    List<string> linesReadFromFile = fileHandler.ReadAllLines(filePath);
 
-    List<string> CleanedLines = new List<string>();
+    List<string> lines = RemoveUnnecesaryLines(linesReadFromFile);
 
-    foreach (String line in lines)
-    {
-        if (!line.StartsWith("//") && !string.IsNullOrWhiteSpace(line))
-        {
-            line.Trim();              // Update line with trimmed string
-            line.Replace(" ", "");    // Update line with spaces removed
-            CleanedLines.Add(line);
-        }
-    }
-
-	fileHandler.SaveAllLines(filePath, CleanedLines);
+    fileHandler.SaveAllLines(filePath, lines);
 }
 catch (Exception msg)
 {
-	Console.WriteLine(msg.Message);
+    Console.WriteLine(msg.Message);
 }
 
 Console.WriteLine("Program terminated");
+
+List<string> RemoveUnnecesaryLines(List<string> lines)
+{
+    List<string> cleanedLines = new List<string>();
+
+    foreach (String line in lines)
+    {
+        if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("//"))
+        {
+            line.Trim();
+            cleanedLines.Add(line);
+        }
+    }
+
+    return cleanedLines;
+}
