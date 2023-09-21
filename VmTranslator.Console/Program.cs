@@ -3,8 +3,8 @@
 FileHandler fileHandler = new FileHandler();
 ParseHandler parseHandler = new ParseHandler();
 
-Console.WriteLine("Please enter name of the file you wish to translate.");
-
+Console.WriteLine("Looking in root of C:\\Files\\!");
+Console.Write("Please enter the full name of the .vm file you want to translate: ");
 string fileName = Console.ReadLine();
 
 string filePath = $"C:\\Files\\{fileName}";
