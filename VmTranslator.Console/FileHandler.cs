@@ -15,7 +15,13 @@
         {
             try
             {
-                return File.ReadAllLines($"{path}.vm").ToList();
+                var test = !path.Contains(".vm");
+
+                if (!path.Contains(".vm") || !File.Exists(path))
+                {
+                    throw new FileNotFoundException("File is not found or the file is not of type .vm", path);
+                }
+                return File.ReadAllLines($"{path}").ToList();
             }
             catch (Exception msg)
             {
@@ -33,14 +39,15 @@
         {
             try
             {
-                if (!File.Exists($"{path}.asm"))
+                string asmFilePath = path.Remove(path.Length - 2, 2);
+                if (!File.Exists($"{asmFilePath}asm"))
                 {
-                    File.WriteAllLines($"{path}.asm", result);
+                    File.WriteAllLines($"{asmFilePath}asm", result);
                 }
                 else
                 {
-                    File.Delete($"{path}.asm");
-                    File.WriteAllLines($"{path}.asm", result);
+                    File.Delete($"{asmFilePath}asm");
+                    File.WriteAllLines($"{asmFilePath}asm", result);
                 }
             }
             catch (Exception msg)
