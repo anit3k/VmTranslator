@@ -15,7 +15,9 @@ try
 
     List<string> lines = RemoveUnnecesaryLines(linesReadFromFile);
 
-    fileHandler.SaveAllLines(filePath, lines);
+    var result = parseHandler.TranslateVmToAssembly(lines);
+
+    fileHandler.SaveAllLines(filePath, result);
 }
 catch (Exception msg)
 {
