@@ -116,44 +116,44 @@
             var assemblyCode = new List<string>();
 
             string segment = parts[1];
-            int index = int.Parse(parts[2]); // Assuming the index is the third part
+            int index = int.Parse(parts[2]);
 
-            switch (segment)
+            // Calculate the target address
+            assemblyCode.Add($"@{index}");
+            assemblyCode.Add("D=A");
+
+            if (segment == "local")
             {
-                case "local":
-                case "argument":
-                case "this":
-                case "that":
-                    // Popping to a memory segment
-                    assemblyCode.Add($"@{index}");
-                    assemblyCode.Add("D=A");
-                    assemblyCode.Add($"@{segmentToMemory(segment)}");
-                    assemblyCode.Add("D=M+D"); // Calculate the address to write to
-                    assemblyCode.Add("@R13"); // Use R13 as a temporary register to store the address
-                    assemblyCode.Add("M=D"); // Store the address in R13
-                    assemblyCode.Add("@SP");
-                    assemblyCode.Add("M=M-1"); // Decrement SP
-                    assemblyCode.Add("A=M");
-                    assemblyCode.Add("D=M"); // Load the value at the top of the stack into D
-                    assemblyCode.Add("@R13"); // Load the address from R13
-                    assemblyCode.Add("A=M"); // Go to the calculated address
-                    assemblyCode.Add("M=D"); // Store the value in memory
-                    break;
-
-                case "temp":
-                    // Popping to the temp segment
-                    assemblyCode.Add("@SP");
-                    assemblyCode.Add("M=M-1"); // Decrement SP
-                    assemblyCode.Add("A=M");
-                    assemblyCode.Add("D=M"); // Load the value at the top of the stack into D
-                    assemblyCode.Add($"@{index + 5}"); // Temp segments start at R5
-                    assemblyCode.Add("M=D"); // Store the value in the temp segment
-                    break;
-
-                default:
-                    // Handle other segments if needed
-                    break;
+                assemblyCode.Add("@LCL");
+                assemblyCode.Add("A=M+D");
             }
+            else if (segment == "argument")
+            {
+                assemblyCode.Add("@ARG");
+                assemblyCode.Add("A=M+D");
+            }
+            else if (segment == "this")
+            {
+                assemblyCode.Add("@THIS");
+                assemblyCode.Add("A=M+D");
+            }
+            else if (segment == "that")
+            {
+                assemblyCode.Add("@THAT");
+                assemblyCode.Add("A=M+D");
+            }
+
+            // Store the address in R13 temporarily
+            assemblyCode.Add("@R13");
+            assemblyCode.Add("M=D");
+
+            // Pop the top value from the stack and store it in the target address
+            assemblyCode.Add("@SP");
+            assemblyCode.Add("AM=M-1");
+            assemblyCode.Add("D=M");
+            assemblyCode.Add("@R13");
+            assemblyCode.Add("A=M");
+            assemblyCode.Add("M=D");
 
             return assemblyCode;
         }
