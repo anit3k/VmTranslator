@@ -3,7 +3,7 @@
     /// <summary>
     /// Reads data from a vm file, and saves it to a asm file.
     /// </summary>
-    internal class FileHandler
+    public class FileHandler
     {
         /// <summary>
         /// Reads all the lines from a given file.
