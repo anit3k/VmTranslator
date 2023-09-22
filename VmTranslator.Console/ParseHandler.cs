@@ -2,11 +2,17 @@
 {
     public class ParseHandler
     {
-        public List<string> TranslateVmToAssembly(List<string> vmCode)
+        private List<string> _vmCode;
+        public ParseHandler(List<string> vmCode)
+        {
+
+            _vmCode = vmCode;
+        }
+        public List<string> TranslateVmToAssembly()
         {
             var assemblyCode = new List<string>();
 
-            foreach (var line in vmCode)
+            foreach (var line in _vmCode)
             {
                 string[] parts = line.Split(' ');
 
