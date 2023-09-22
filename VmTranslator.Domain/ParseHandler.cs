@@ -1,4 +1,4 @@
-﻿namespace VmTranslator.Console
+﻿namespace VmTranslator.Domain
 {
     public class ParseHandler
     {
