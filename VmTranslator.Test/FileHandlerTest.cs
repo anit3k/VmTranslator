@@ -1,4 +1,4 @@
-﻿using VmTranslator.Console;
+﻿using VmTranslator.Domain;
 
 namespace VmTranslator.Test
 {

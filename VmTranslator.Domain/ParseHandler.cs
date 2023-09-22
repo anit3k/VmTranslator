@@ -165,6 +165,8 @@
                     return "THIS";
                 case ThatSegment:
                     return "THAT";
+                case TempSegment:
+                    return "R5";
                 default:
                     throw new ArgumentException($"Unknown segment: {segment}");
             }

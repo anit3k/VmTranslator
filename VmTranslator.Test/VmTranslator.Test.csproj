@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\VmTranslator.Console\VmTranslator.Console.csproj" />
+    <ProjectReference Include="..\VmTranslator.Domain\VmTranslator.Domain.csproj" />
   </ItemGroup>
 
 </Project>
