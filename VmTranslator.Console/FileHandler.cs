@@ -5,6 +5,7 @@
     /// </summary>
     public class FileHandler
     {
+        #region Methods
         /// <summary>
         /// Reads all the lines from a given file.
         /// </summary>
@@ -55,5 +56,6 @@
                 throw new IOException(msg.Message);
             }
         }
+        #endregion
     }
 }

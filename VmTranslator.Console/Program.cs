@@ -1,7 +1,7 @@
 ﻿using VmTranslator.Console;
 
-FileHandler fileHandler = new FileHandler();
-ParseHandler parseHandler = new ParseHandler();
+FileHandler _fileHandler = new FileHandler();
+IBuilder _builder = new ParseHandlerBuilder();
 
 Console.WriteLine("Looking in root of C:\\Files\\!");
 Console.Write("Please enter the full name of the .vm file you want to translate: ");
@@ -11,13 +11,14 @@ string filePath = $"C:\\Files\\{fileName}";
 
 try
 {
-    List<string> linesReadFromFile = fileHandler.ReadAllLines(filePath);
+    List<string> linesReadFromFile = _fileHandler.ReadAllLines(filePath);
 
     List<string> lines = RemoveUnnecesaryLines(linesReadFromFile);
 
-    var result = parseHandler.TranslateVmToAssembly(lines);
+    _builder.BuildAssemblyCode(lines);
+    var result = _builder.Build();
 
-    fileHandler.SaveAllLines(filePath, result);
+    _fileHandler.SaveAllLines(filePath, result);
 }
 catch (Exception msg)
 {
