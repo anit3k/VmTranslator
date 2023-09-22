@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VmTranslator.Console", "VmTranslator.Console\VmTranslator.Console.csproj", "{7E09C9FC-58F5-42E9-A417-01B863DF80E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VmTranslator.ConsoleApplication", "VmTranslator.Console\VmTranslator.ConsoleApplication.csproj", "{7E09C9FC-58F5-42E9-A417-01B863DF80E1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VmTranslator.Test", "VmTranslator.Test\VmTranslator.Test.csproj", "{81EC961F-F20A-4863-A880-005B5BE5F9D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VmTranslator.Domain", "VmTranslator.Domain\VmTranslator.Domain.csproj", "{40E024D4-C383-4ECB-B807-7957FE6F29DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VmTranslator.Domain", "VmTranslator.Domain\VmTranslator.Domain.csproj", "{40E024D4-C383-4ECB-B807-7957FE6F29DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

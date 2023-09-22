@@ -13,10 +13,8 @@ namespace VmTranslator.Domain
             _parseBuilder = parseBuilder;
         }
 
-        public void Run(string path)
+        public void Run(string filePath)
         {
-            string filePath = $"C:\\Files\\{path}";
-
             try
             {
                 List<string> linesReadFromFile = _fileHandler.ReadAllLines(filePath);

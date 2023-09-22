@@ -2,7 +2,7 @@
 using VmTranslator.Domain;
 using VmTranslator.Domain.interfaces;
 
-namespace VmTranslator.Console
+namespace VmTranslator.ConsoleApplication
 {
     public class AutofacConfig
     {
