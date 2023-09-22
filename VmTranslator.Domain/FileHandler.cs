@@ -1,9 +1,11 @@
-﻿namespace VmTranslator.Console
+﻿using VmTranslator.Domain.interfaces;
+
+namespace VmTranslator.Domain
 {
     /// <summary>
     /// Reads data from a vm file, and saves it to a asm file.
     /// </summary>
-    public class FileHandler
+    public class FileHandler : IFileHandler
     {
         #region Methods
         /// <summary>

@@ -1,4 +1,7 @@
-﻿namespace VmTranslator.Console
+﻿using VmTranslator.Domain;
+using VmTranslator.Domain.interfaces;
+
+namespace VmTranslator.Domain
 {
     public class ParseHandlerBuilder : IBuilder
     {
