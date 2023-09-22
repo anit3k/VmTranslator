@@ -2,24 +2,28 @@
 {
     public class ParseHandler
     {
+        #region fields
         private readonly List<string> _vmCode;
         private readonly List<string> _assemblyCode;
         private int _labelCounter = 0;
 
-        // Constants for segment names
         private const string ConstantSegment = "constant";
         private const string LocalSegment = "local";
         private const string ArgumentSegment = "argument";
         private const string ThisSegment = "this";
         private const string ThatSegment = "that";
         private const string TempSegment = "temp";
+        #endregion
 
+        #region Constructor
         public ParseHandler(List<string> vmCode)
         {
             _vmCode = vmCode;
             _assemblyCode = new List<string>();
         }
+        #endregion
 
+        #region Public Methods
         public List<string> TranslateVmToAssembly()
         {
             foreach (var line in _vmCode)
@@ -29,7 +33,9 @@
 
             return _assemblyCode;
         }
+        #endregion
 
+        #region Private Methods
         private void TranslateCurrentLineToAsmCommands(string line)
         {
             string[] parts = line.Split(' ');
@@ -258,5 +264,6 @@
         {
             _assemblyCode.AddRange(asmInstructions);
         }
+        #endregion
     }
 }
