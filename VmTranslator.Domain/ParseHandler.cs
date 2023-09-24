@@ -2,6 +2,9 @@
 
 namespace VmTranslator.Domain
 {
+    /// <summary>
+    /// A class that is in charge of the translations.
+    /// </summary>
     public class ParseHandler
     {
         #region fields
@@ -9,12 +12,12 @@ namespace VmTranslator.Domain
         private readonly List<string> _assemblyCode;
         private int _labelCounter = 0;
 
-        private const string ConstantSegment = "constant";
-        private const string LocalSegment = "local";
-        private const string ArgumentSegment = "argument";
-        private const string ThisSegment = "this";
-        private const string ThatSegment = "that";
-        private const string TempSegment = "temp";
+        private const string _constantSegment = "constant";
+        private const string _localSegment = "local";
+        private const string _argumentSegment = "argument";
+        private const string _thisSegment = "this";
+        private const string _thatSegment = "that";
+        private const string _tempSegment = "temp";
         #endregion
 
         #region Constructor
@@ -25,6 +28,11 @@ namespace VmTranslator.Domain
         #endregion
 
         #region Public Methods
+        /// <summary>
+        /// Translates the lines received by calling the "TranslateCurrentLineToAsmCommands" method for each line.
+        /// </summary>
+        /// <param name="vmCode">All the lines gotten from the file we wish to translate.</param>
+        /// <returns>Returns a list of strings containing all the new code as assembly.</returns>
         public List<string> TranslateVmToAssembly(List<string> vmCode)
         {
             _vmCode = vmCode;
@@ -39,6 +47,11 @@ namespace VmTranslator.Domain
         #endregion
 
         #region Private Methods
+        /// <summary>
+        /// Splits all the lines into parts on the spaces, so we know each space seperates a command.
+        /// Then we know part 0 is the command, so we look at that index, and run it through a switch case, of all possible commands, and call the method to handle that command.
+        /// </summary>
+        /// <param name="line">The line we want to look at to identify the command.</param>
         private void TranslateCurrentLineToAsmCommands(string line)
         {
             string[] parts = line.Split(' ');
@@ -85,6 +98,13 @@ namespace VmTranslator.Domain
             }
         }
 
+        /// <summary>
+        /// Add the predefined assemlby code lines to the result, if the method is called.
+        /// Handles the push command, and translates it to assembly, by looking at the parts of the code.
+        /// We know part 1, is segments. And part 2 is index's.
+        /// We then run the parts for the segment through the switch case to know how to handle the segment code, and give back the respective code.
+        /// </summary>
+        /// <param name="parts">The parts contains the different commands, like segments and index's and commands, for the passed line.</param>
         private void TranslatePush(string[] parts)
         {
             string segment = parts[1];
@@ -92,17 +112,17 @@ namespace VmTranslator.Domain
 
             switch (segment)
             {
-                case ConstantSegment:
+                case _constantSegment:
                     Emit(
                         $"@{index}",
                         "D=A"
                     );
                     PushDToStack();
                     break;
-                case LocalSegment:
-                case ArgumentSegment:
-                case ThisSegment:
-                case ThatSegment:
+                case _localSegment:
+                case _argumentSegment:
+                case _thisSegment:
+                case _thatSegment:
                     Emit(
                         $"@{index}",
                         "D=A",
@@ -112,7 +132,7 @@ namespace VmTranslator.Domain
                     );
                     PushDToStack();
                     break;
-                case TempSegment:
+                case _tempSegment:
                     Emit(
                         $"@{5 + index}", // Temp segments start at R5
                         "D=M"
@@ -124,6 +144,10 @@ namespace VmTranslator.Domain
                     break;
             }
         }
+
+        /// <summary>
+        /// Add the predefined assemlby code lines to the result, if the method is called.
+        /// </summary>
         private void PushDToStack()
         {
             Emit(
@@ -135,6 +159,10 @@ namespace VmTranslator.Domain
             );
         }
 
+        /// <summary>
+        /// Add the predefined assemlby code lines to the result, if the method is called.
+        /// </summary>
+        /// <param name="parts">Contains the commands, segments, and indexs for the parsed line.</param>
         private void TranslatePop(string[] parts)
         {
             string segment = parts[1];
@@ -156,19 +184,26 @@ namespace VmTranslator.Domain
             );
         }
 
+        /// <summary>
+        /// Handles the Segment code, by looking at the segment passed on, and adding the needed assembly code for the segment to the result list.
+        /// </summary>
+        /// <param name="segment">The segment we are checking for type.</param>
+        /// <param name="parts">Looks for the parts like "this" and "that" for the pointer to be able to understand.</param>
+        /// <returns>Every case returns a string that get's added to the result line.</returns>
+        /// <exception cref="ArgumentException">Throws an exception if it's not part of the segment switch, since it's not correct syntax otherwise.</exception>
         private string SegmentToMemory(string segment, string[] parts)
         {
             switch (segment)
             {
-                case LocalSegment:
+                case _localSegment:
                     return "LCL";
-                case ArgumentSegment:
+                case _argumentSegment:
                     return "ARG";
-                case ThisSegment:
+                case _thisSegment:
                     return "THIS";
-                case ThatSegment:
+                case _thatSegment:
                     return "THAT";
-                case TempSegment:
+                case _tempSegment:
                     return "R5";
                 case "pointer":
                     // "pointer 0" corresponds to "THIS"
@@ -181,7 +216,9 @@ namespace VmTranslator.Domain
             }
         }
 
-
+        /// <summary>
+        /// Add the predefined assemlby code lines to the result, if the method is called.
+        /// </summary>
         private void TranslateAdd()
         {
             Emit(
@@ -193,7 +230,9 @@ namespace VmTranslator.Domain
             );
         }
 
-
+        /// <summary>
+        /// Add the predefined assemlby code lines to the result, if the method is called.
+        /// </summary>
         private void TranslateSub()
         {
             Emit(
@@ -205,6 +244,9 @@ namespace VmTranslator.Domain
             );
         }
 
+        /// <summary>
+        /// Add the predefined assemlby code lines to the result, if the method is called.
+        /// </summary>
         private void TranslateNeg()
         {
             Emit(
@@ -214,6 +256,10 @@ namespace VmTranslator.Domain
             );
         }
 
+        /// <summary>
+        /// Handles the EQUAL keyword, and adds the correct assembly code to the result, based on the jump conditions passed in.
+        /// </summary>
+        /// <param name="jumpCondition">The jump conditions we need to check up against.</param>
         private void TranslateComparison(string jumpCondition)
         {
             string trueLabel = "EQUAL";
@@ -240,7 +286,9 @@ namespace VmTranslator.Domain
             );
         }
 
-
+        /// <summary>
+        /// Add the predefined assemlby code lines to the result, if the method is called.
+        /// </summary>
         private void TranslateAnd()
         {
             Emit(
@@ -252,6 +300,9 @@ namespace VmTranslator.Domain
             );
         }
 
+        /// <summary>
+        /// Add the predefined assemlby code lines to the result, if the method is called.
+        /// </summary>
         private void TranslateOr()
         {
             Emit(
@@ -263,6 +314,9 @@ namespace VmTranslator.Domain
             );
         }
 
+        /// <summary>
+        /// Add the predefined assemlby code lines to the result, if the method is called.
+        /// </summary>
         private void TranslateNot()
         {
             Emit(
@@ -272,6 +326,10 @@ namespace VmTranslator.Domain
             );
         }
 
+        /// <summary>
+        /// Adds the instructions in the assembly version to the _assemblyCode variable, which we use as our result.
+        /// </summary>
+        /// <param name="asmInstructions">The instructions are the lines we write when we call "Emit" that we wish to add to the _assemblyCode variable.</param>
         private void Emit(params string[] asmInstructions)
         {
             _assemblyCode.AddRange(asmInstructions);
