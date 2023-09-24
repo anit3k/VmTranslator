@@ -7,17 +7,23 @@ namespace VmTranslator.Domain
     {
         #region fields
         private List<string> _vmCode;
+        private readonly ParseHandler _parseHandler;
         #endregion
+
+        public ParseHandlerBuilder(ParseHandler parseHandler)
+        {
+            _parseHandler = parseHandler;
+        }
 
         #region Methods
         public void BuildAssemblyCode(List<string> vmCode)
         {
             _vmCode = vmCode;
         }
+
         public List<string> Build()
         {
-            var handler = new ParseHandler(_vmCode);
-            return handler.TranslateVmToAssembly();
+            return _parseHandler.TranslateVmToAssembly(_vmCode);
         }
         #endregion
     }

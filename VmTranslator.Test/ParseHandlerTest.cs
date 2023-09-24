@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-using System.Reflection.Metadata;
-using VmTranslator.Domain;
+﻿using VmTranslator.Domain;
 
 namespace VmTranslator.Test
 {
@@ -28,14 +26,21 @@ namespace VmTranslator.Test
             CollectionAssert.AreEqual(expectedAssemblyCode, assemblyCode);
         }
 
-        private List<string> Simple_Add()
+        [Test]
+        public void Should_Not_Translate_Invalid_VM_Commands()
         {
-            return new List<string>
+            // Arrange
+            var invalidVmCode = new List<string>
             {
-                "push constant 7",
-                "push constant 8",
-                "add"
+                "push invalid_segment 42",
+                "pop unsupported_segment 10"
             };
+
+            // Initialize the ParseHandler for the test case
+            _parseHandler = new ParseHandler(invalidVmCode);
+
+            // Act and Assert
+            Assert.Throws<ArgumentException>(() => _parseHandler.TranslateVmToAssembly());
         }
 
         private List<string> Basic_Test()
@@ -67,32 +72,6 @@ namespace VmTranslator.Test
                 "sub",
                 "push temp 6",
                 "add"
-            };
-        }
-
-        private List<string> Simple_Add_Result()
-        {
-            return new List<string>
-            {
-                "@7",
-                "D=A",
-                "@SP",
-                "A=M",
-                "M=D",
-                "@SP",
-                "M=M+1",
-                "@8",
-                "D=A",
-                "@SP",
-                "A=M",
-                "M=D",
-                "@SP",
-                "M=M+1",
-                "@SP",
-                "AM=M-1",
-                "D=M",
-                "A=A-1",
-                "M=M+D"
             };
         }
 

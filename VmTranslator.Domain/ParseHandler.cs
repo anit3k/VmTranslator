@@ -1,9 +1,11 @@
-﻿namespace VmTranslator.Domain
+﻿using System.IO;
+
+namespace VmTranslator.Domain
 {
     public class ParseHandler
     {
         #region fields
-        private readonly List<string> _vmCode;
+        private List<string> _vmCode;
         private readonly List<string> _assemblyCode;
         private int _labelCounter = 0;
 
@@ -16,16 +18,17 @@
         #endregion
 
         #region Constructor
-        public ParseHandler(List<string> vmCode)
+        public ParseHandler()
         {
-            _vmCode = vmCode;
             _assemblyCode = new List<string>();
         }
         #endregion
 
         #region Public Methods
-        public List<string> TranslateVmToAssembly()
+        public List<string> TranslateVmToAssembly(List<string> vmCode)
         {
+            _vmCode = vmCode;
+
             foreach (var line in _vmCode)
             {
                 TranslateCurrentLineToAsmCommands(line);
@@ -103,7 +106,7 @@
                     Emit(
                         $"@{index}",
                         "D=A",
-                        $"@{SegmentToMemory(segment)}",
+                        $"@{SegmentToMemory(segment, parts)}",
                         "A=M+D",
                         "D=M"
                     );
@@ -140,7 +143,7 @@
             Emit(
                 $"@{index}",
                 "D=A",
-                $"@{SegmentToMemory(segment)}",
+                $"@{SegmentToMemory(segment, parts)}",
                 "D=M+D",
                 "@R13",
                 "M=D", // Store the target address in R13
@@ -153,7 +156,7 @@
             );
         }
 
-        private string SegmentToMemory(string segment)
+        private string SegmentToMemory(string segment, string[] parts)
         {
             switch (segment)
             {
@@ -167,10 +170,17 @@
                     return "THAT";
                 case TempSegment:
                     return "R5";
+                case "pointer":
+                    // "pointer 0" corresponds to "THIS"
+                    // "pointer 1" corresponds to "THAT"
+                    return (2 + int.Parse(parts[2])).ToString();
+                case "static":
+                    return $"STATIC_{parts[2]}";
                 default:
                     throw new ArgumentException($"Unknown segment: {segment}");
             }
         }
+
 
         private void TranslateAdd()
         {
@@ -206,9 +216,8 @@
 
         private void TranslateComparison(string jumpCondition)
         {
-            string trueLabel = $"TRUE{_labelCounter}";
-            string endLabel = $"END{_labelCounter}";
-            _labelCounter++;
+            string trueLabel = "EQUAL";
+            string endLabel = "END_EQUAL";
 
             Emit(
                 "@SP",
@@ -230,6 +239,7 @@
                 $"({endLabel})"
             );
         }
+
 
         private void TranslateAnd()
         {
